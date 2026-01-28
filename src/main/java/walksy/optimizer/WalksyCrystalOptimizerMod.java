@@ -15,7 +15,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.Packet;
+// MC 1.21+: Packet was moved from net.minecraft.network to net.minecraft.network.packet
+// Older import no longer exists in current Yarn mappings
+import net.minecraft.network.packet.Packet;
+
 import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -27,6 +30,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import walksy.optimizer.command.EnableOptimizerCommand;
+import net.minecraft.server.world.ServerWorld;
 
 import java.util.List;
 
@@ -65,11 +69,17 @@ public class WalksyCrystalOptimizerMod implements ClientModInitializer {
             return;
         if (lookingAtSaidEntity()) {
             if (mc.options.attackKey.isPressed()) {
-                if (hitCount >= 1) {
-                    removeSaidEntity().kill();
-                    removeSaidEntity().setRemoved(Entity.RemovalReason.KILLED);
-                    removeSaidEntity().onRemoved();
-                }
+              if (hitCount >= 1) {
+    // Client-side only: cannot call Entity.kill(ServerWorld) here
+    // because ServerWorld is not available and Entity world access is restricted.
+    Entity e = removeSaidEntity();
+    if (e != null) {
+        e.setRemoved(Entity.RemovalReason.KILLED);
+        e.onRemoved();
+    }
+}
+
+
                 hitCount++;
             }
         }

@@ -15,7 +15,12 @@ import net.minecraft.entity.mob.MagmaCubeEntity;
 import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.Packet;
+// NOTE: Minecraft/Yarn 1.21+ moved Packet out of net.minecraft.network.
+// Old import no longer exists, so we must use the new package.
+import net.minecraft.network.packet.Packet;
+
+//import net.minecraft.network.Packet;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.ActionResult;
