@@ -68,7 +68,11 @@ public class EndCrystalItemMixin {
         return mc.world.raycast(new RaycastContext(camPos, camPos.add(clientLookVec.multiply(4.5)), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, mc.player));
 
     }
-    private Vec3d lookVec() {
+//outdated method 
+// MC 1.21+: MathHelper.cos/sin were removed at runtime.
+// Use Math.cos/sin instead to avoid NoSuchMethodError.
+
+  /*  private Vec3d lookVec() {
         float f = (float) Math.PI / 180;
         float pi = (float) Math.PI;
         float f1 = MathHelper.cos(-mc.player.getYaw() * f - pi);
@@ -76,7 +80,20 @@ public class EndCrystalItemMixin {
         float f3 = -MathHelper.cos(-mc.player.getPitch() * f);
         float f4 = MathHelper.sin(-mc.player.getPitch() * f);
         return new Vec3d(f2 * f3, f4, f1 * f3).normalize();
-    }
+    } */
+
+    private Vec3d lookVec() {
+    float f = (float) Math.PI / 180.0F;
+    float pi = (float) Math.PI;
+
+    float f1 = (float) Math.cos(-mc.player.getYaw() * f - pi);
+    float f2 = (float) Math.sin(-mc.player.getYaw() * f - pi);
+    float f3 = -(float) Math.cos(-mc.player.getPitch() * f);
+    float f4 = (float) Math.sin(-mc.player.getPitch() * f);
+
+    return new Vec3d(f2 * f3, f4, f1 * f3).normalize();
+}
+
 
     private boolean canPlaceCrystalServer(BlockPos block) {
         BlockState blockState = mc.world.getBlockState(block);

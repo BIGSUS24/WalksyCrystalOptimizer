@@ -124,8 +124,12 @@ public class WalksyCrystalOptimizerMod implements ClientModInitializer {
                         || entity.getEntity() instanceof MagmaCubeEntity
                         || entity.getEntity() instanceof SlimeEntity);
     }
+//outdated method 
+// MC 1.21+: MathHelper.cos/sin were removed at runtime.
+// Use Math.cos/sin instead to avoid NoSuchMethodError.
 
-    private static Vec3d lookVec() {
+
+/*  private static Vec3d lookVec() {
         float f = (float) Math.PI / 180;
         float pi = (float) Math.PI;
         float f1 = MathHelper.cos(-mc.player.getYaw() * f - pi);
@@ -133,7 +137,19 @@ public class WalksyCrystalOptimizerMod implements ClientModInitializer {
         float f3 = -MathHelper.cos(-mc.player.getPitch() * f);
         float f4 = MathHelper.sin(-mc.player.getPitch() * f);
         return new Vec3d(f2 * f3, f4, f1 * f3).normalize();
-    }
+    }*/ 
+   private static Vec3d lookVec() {
+    float f = (float) Math.PI / 180.0F;
+    float pi = (float) Math.PI;
+
+    float f1 = (float) Math.cos(-mc.player.getYaw() * f - pi);
+    float f2 = (float) Math.sin(-mc.player.getYaw() * f - pi);
+    float f3 = -(float) Math.cos(-mc.player.getPitch() * f);
+    float f4 = (float) Math.sin(-mc.player.getPitch() * f);
+
+    return new Vec3d(f2 * f3, f4, f1 * f3).normalize();
+}
+
 
     private static ActionResult sendInteractBlockPacket(BlockPos pos, Direction dir) {
         Vec3d vec = new Vec3d(pos.getX(), pos.getY(), pos.getZ());
